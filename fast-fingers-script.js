@@ -2,6 +2,7 @@
     $("#input-row").append("<input type='text' id='tplInputBox' class='form-control'>");
 
     $("#tplInputBox").keydown(function ($event) {
+        console.log($event);
         var code = ($event.which && typeof $event.which === "number")
             ? $event.which
             : $event.keyCode && typeof $event.keyCode === "number"
@@ -9,8 +10,8 @@
                 : $event.charCode;
 
         console.log("code", code);
-        let ignoreCodeList = [13, 37, 38, 39, 40, 46];
-        if(ignoreCodeList.includes(code)){
+        let ignoreCodeList = [13, 16, 37, 38, 39, 40, 46];
+        if(ignoreCodeList.includes(code) || (code >=65 && code <= 90)){
             //do nothing
         } else if(code == 8){
             //backspace
@@ -19,14 +20,31 @@
             //space
             var e = $.Event("keyup");
             e.which = 32;
-            $("#inputfield").trigger(e);
+            e.keyCode = 32;
+            $("input#inputfield").trigger(e);
             $("#tplInputBox").val("");
-        } else {
+            console.info(e);
+        } else if(code >= 97 && code <= 122){
             var oldValue = $("#inputfield").val();
             var currentValue = oldValue += $event.key;
             $("#inputfield").val(currentValue).trigger("keyup");
         }
     });
+
+    $("#tplInputBox").keyup(function ($event) {
+        console.log($event);
+        var code = ($event.which && typeof $event.which === "number")
+            ? $event.which
+            : $event.keyCode && typeof $event.keyCode === "number"
+                ? $event.keyCode
+                : $event.charCode;
+
+        console.log("code", code);
+        if(code >= 65 && code <= 90) {
+            console.log("val", $("#tplInputBox").val());
+            $("#tplInputBox").val($("#tplInputBox").val().slice(0, -1));
+        }
+    })
 
     $("#tplInputBox").css({
         "border-top": "1px solid #575757",
