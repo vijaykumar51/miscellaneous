@@ -1,8 +1,7 @@
 (function () {
     $("#input-row").append("<input type='text' id='tplInputBox' class='form-control'>");
 
-    $("#tplInputBox").keypress(function ($event) {
-
+    $("#tplInputBox").keydown(function ($event) {
         var code = ($event.which && typeof $event.which === "number")
             ? $event.which
             : $event.keyCode && typeof $event.keyCode === "number"
@@ -10,8 +9,14 @@
                 : $event.charCode;
 
         console.log("code", code);
-
-        if (code == 32) {
+        let ignoreCodeList = [13, 37, 38, 39, 40, 46];
+        if(ignoreCodeList.includes(code)){
+            //do nothing
+        } else if(code == 8){
+            //backspace
+            $("#inputfield").val($("#inputfield").val().slice(0, -1));
+        } else if (code == 32) {
+            //space
             var e = $.Event("keyup");
             e.which = 32;
             $("#inputfield").trigger(e);
